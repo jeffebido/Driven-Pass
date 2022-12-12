@@ -7,35 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model users {
   id         Int          @id @default(autoincrement())
   email      String       @unique
   password   String
-  Credential Credential[]
-  Network    Network[]
+  credential credentials[]
+  network    networks[]
 
-  @@map("users")
 }
 
-model Credential {
+model credentials {
   id       Int    @id @default(autoincrement())
   title    String
   url      String
   username String
   password String
   userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+  user     users   @relation(fields: [userId], references: [id])
 
-  @@map("credentials")
 }
 
-model Network {
+model networks {
   id       Int    @id @default(autoincrement())
   title    String
   network  String
   password String
   userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+  user     users   @relation(fields: [userId], references: [id])
 
-  @@map("networks")
 }
