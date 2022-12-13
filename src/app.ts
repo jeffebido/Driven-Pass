@@ -1,9 +1,11 @@
-import express from 'express';
+import express, { Express } from 'express';
 import cors from 'cors';
 
 import authRouter from './routes/authRouter';
 import credentialRouter from './routes/credentialRouter';
 import wifiRouter from './routes/wifiRouter';
+
+import {  connectDb, disconnectDB } from "./config/database";
 
 const app = express();
 
@@ -15,9 +17,13 @@ app.use(authRouter);
 app.use(credentialRouter);
 app.use(wifiRouter);
 
-const PORT = process.env.PORT || '5000';
-const HOST = '127.0.0.1';
+export function init(): Promise<Express> {
+    connectDb();
+    return Promise.resolve(app);
+}
+  
+export async function close(): Promise<void> {
+    await disconnectDB();
+}
 
-app.listen({ port: PORT, host: HOST},  () => {
-    console.log(`Server is listening on port ${PORT}.`);
-});
+export default app;
